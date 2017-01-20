@@ -47,7 +47,7 @@ public class FileDAO extends DAO<File> {
     }
 
     @Override
-    public void create(File obj) {
+    public boolean create(File obj) {
         PreparedStatement prepare =null;
          try {
             this.connect = ConnectionSql.getInstance();
@@ -65,6 +65,7 @@ public class FileDAO extends DAO<File> {
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+         return true;
     }
 
     @Override

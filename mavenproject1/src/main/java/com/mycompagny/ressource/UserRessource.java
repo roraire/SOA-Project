@@ -6,6 +6,7 @@
 package com.mycompagny.ressource;
 import com.mycompagny.Database.UserDAO;
 import com.mycompagny.Model.*;
+import java.io.IOException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,8 +15,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import sun.misc.BASE64Decoder;
 /**
  *
  * @author boukarabilaa
@@ -26,6 +31,34 @@ import javax.ws.rs.PUT;
 public class UserRessource {
         UserDAO user_dao = new UserDAO();
                 
+       
+       /* @GET
+        @Path("/Authentification")
+	public String getAuth(@HeaderParam("authorization") String authString) {
+            System.out.println(authString);
+            if(authString == null || authString.isEmpty() || user_dao.isUserAuthenticated(authString))
+            {
+                 return "ko";
+              
+            }
+            
+             return "ok";
+		//return "you are connected";
+	}*/
+        
+        /*@GET
+        @Path("/Authentification")
+	public String getAuth(@Context HttpServletRquest authString) {
+            System.out.println(authString);
+            if(authString == null || authString.isEmpty() || user_dao.isUserAuthenticated(authString))
+            {
+                 return "ko";
+              
+            }
+            
+             return "ok";
+		//return "you are connected";
+	} */  
         
     	@GET
         @Path("/{userid}")
@@ -35,6 +68,7 @@ public class UserRessource {
 	
 	@POST
 	public void addUser( User profile) {
+            System.out.println("com.mycompagny.ressource.UserRessource.addUser()");
 		user_dao.create(profile);
 	}
 	

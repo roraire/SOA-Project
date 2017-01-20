@@ -44,7 +44,7 @@ public class FreindDAO extends DAO<Freind>{
     }
 
     @Override
-    public void create(Freind obj) {
+    public boolean create(Freind obj) {
         PreparedStatement prepare =null;
          try {
             this.connect = ConnectionSql.getInstance();
@@ -56,8 +56,7 @@ public class FreindDAO extends DAO<Freind>{
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
-
+         return true;
     }
 
     @Override

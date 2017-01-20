@@ -48,7 +48,7 @@ public class ShareDAO extends DAO<Share>{
     }
 
     @Override
-    public void create(Share obj) {
+    public boolean create(Share obj) {
         PreparedStatement prepare =null;
          try {
             this.connect = ConnectionSql.getInstance();
@@ -61,6 +61,7 @@ public class ShareDAO extends DAO<Share>{
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+         return true;
     }
 
     @Override
@@ -114,18 +115,18 @@ public class ShareDAO extends DAO<Share>{
         ArrayList<File> files =new ArrayList<>();
         PreparedStatement prepare =null;
          try {
+             //"SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM share s ,file f WHERE f.created_by=? and s.shared_with=? ");
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
-            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM share s ,file f WHERE f.created_by=? and s.created_by=? ");
+            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM share s ,file f  WHERE s.shared_with=? and s.Id_file=f.Id_file");
             prepare.setInt(1,id);
-            prepare.setInt(2,id);
             ResultSet rs = prepare.executeQuery();
             while (rs.next()) {
                 File file =new File();
                 file.setId(rs.getInt("Id_file"));
                 file.setCreated_by(rs.getInt("created_by"));
                 file.setFile_name(rs.getString("file_name"));
-                file.setDate(rs.getInt("Date"));
+                file.setDate(rs.getLong("Date"));
                 file.setType(rs.getString("Type"));
                 file.setUrl(rs.getString("URL"));
                 files.add(file);

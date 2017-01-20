@@ -38,9 +38,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Consumes({MediaType.APPLICATION_JSON})
 public class FileRessource {
     
-      
-    
- 
 
         FileDAO file_dao=new FileDAO();
                 
@@ -100,12 +97,12 @@ public class FileRessource {
                                     @FormDataParam("type") String type,
                                     @PathParam("userid") int userid)throws Exception
     { 
-        String UPLOAD_PATH = "c:/temp/";
+        String UPLOAD_PATH = "C:/Users/boukarabilaa/Downloads/mavenproject1/src/main/java/Files";
         //String file_name =fileMetaData.getFileName();
         //jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         //File file = jsonPart.getValueAs(File.class);
         File file = new File(userid,file_name,type,UPLOAD_PATH);
-        UPLOAD_PATH ="c:/temp/"+file.getDate()+fileMetaData.getFileName();
+        UPLOAD_PATH ="C:/Users/boukarabilaa/Downloads/mavenproject1/src/main/java/Files/"+file.getDate()+fileMetaData.getFileName();
         file.setUrl(UPLOAD_PATH);
         System.out.println(file.toString());
         
@@ -134,7 +131,7 @@ public class FileRessource {
     
     @GET
     @Path("/{fileid}")
-    @Produces("image/*")
+    @Produces("image/jpg")
     public Response getFile(@PathParam("fileid") int fileid) {
             File f =file_dao.find(fileid);
             String FILE_PATH = f.getUrl();
