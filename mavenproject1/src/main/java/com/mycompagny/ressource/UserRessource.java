@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.mycompagny.ressource;
+import com.mycompagny.Database.FreindDAO;
 import com.mycompagny.Database.UserDAO;
 import com.mycompagny.Model.*;
 import java.io.IOException;
@@ -15,10 +16,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import sun.misc.BASE64Decoder;
 /**
@@ -32,19 +36,36 @@ public class UserRessource {
         UserDAO user_dao = new UserDAO();
                 
        
-       /* @GET
+        @GET
         @Path("/Authentification")
-	public String getAuth(@HeaderParam("authorization") String authString) {
-            System.out.println(authString);
-            if(authString == null || authString.isEmpty() || user_dao.isUserAuthenticated(authString))
-            {
-                 return "ko";
-              
-            }
+	public User getAuth(@HeaderParam("authorization") String authString) {
+            System.out.println(authString );
             
-             return "ok";
+           if(authString == null || authString.isEmpty() || !user_dao.isUserAuthenticated(authString)){
+               String decodedAuth = "";
+            String[] authParts = authString.split("\\s+");
+            String authInfo = authParts[1];
+        
+            byte[] bytes = null;
+            try {
+                bytes = new BASE64Decoder().decodeBuffer(authInfo);
+            } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        decodedAuth = new String(bytes);
+        String[] userAuth = decodedAuth.split(":");
+        
+        System.out.println(userAuth[0]+userAuth[1]);
+        return  user_dao.find(userAuth[0]);
+           }
+            
+           return null;
+              
+           //NewCookie cookie = new NewCookie("authorization",authString);
+             // return Response.ok("OK").cookie(cookie).build();
 		//return "you are connected";
-	}*/
+	}
         
         /*@GET
         @Path("/Authentification")
@@ -62,9 +83,11 @@ public class UserRessource {
         
     	@GET
         @Path("/{userid}")
-	public User getUser(@PathParam("userid")int id) {
+	public User getUser(@PathParam("userid")int id, @CookieParam("authString") String authString) {
+           
 		return user_dao.find(id);
-	}
+           
+        }
 	
 	@POST
 	public void addUser( User profile) {
@@ -91,9 +114,15 @@ public class UserRessource {
                 
 	}
         
+        
+        
         @Path("/{userid}/Files")
-	public FileRessource getFileRessource() {
-		return new FileRessource();
+	public Class<FileRessource> getFileRessource() {
+		return FileRessource.class;
 	}
+        
+       
+        
+        
     
 }

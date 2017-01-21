@@ -43,15 +43,15 @@ public class FreindDAO extends DAO<Freind>{
         return freind;
     }
 
-    @Override
-    public boolean create(Freind obj) {
+    
+    public boolean create(int userid,int friendid) {
         PreparedStatement prepare =null;
          try {
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
             "INSERT INTO `freind`( `id_user`, `id_freind`) VALUES (?,?)");
-            prepare.setInt(1, obj.getId_user());
-            prepare.setInt(2,obj.getId_freind());
+            prepare.setInt(1, userid);
+            prepare.setInt(2,friendid);
             prepare.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,33 +64,54 @@ public class FreindDAO extends DAO<Freind>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void delete(Freind obj) {
+    public boolean freindExist(int iduser,int idfreind) {
+    PreparedStatement prepare =null;
+        boolean msg=false;
+       try {
+            this.connect = ConnectionSql.getInstance();
+            prepare = this.connect.prepareStatement(
+            "SELECT * FROM `freind` WHERE id_user=? and id_freind=?");
+            prepare.setInt(1,iduser);
+            prepare.setInt(2,idfreind);
+            ResultSet rs = prepare.executeQuery();
+            while (rs.next()) {
+            msg=true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return msg;
+    }
+    public boolean delete(int iduser,int idfreind) {
         PreparedStatement prepare =null;
+        boolean msg=false;
        try {
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
             "DELETE FROM `freind` WHERE id_user=? and id_freind=?");
-            prepare.setInt(1,obj.getId_user());
-            prepare.setInt(1,obj.getId_freind());
+            prepare.setInt(1,iduser);
+            prepare.setInt(2,idfreind);
             prepare.executeUpdate();
-            
+            msg=true;
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+       return msg;
     }
 
     
-    public List<Freind> getAll() {
-        Freind freind =new Freind();
+    public List<Freind> getAll(int id) {
+        
         ArrayList<Freind> freinds =new ArrayList<Freind>();
         PreparedStatement prepare =null;
          try {
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
-            "SELECT * FROM `freind`");
+            "SELECT * FROM `freind` WHERE id_user=?");
+            prepare.setInt(1,id);
             ResultSet rs = prepare.executeQuery();
             while (rs.next()) {
+                Freind freind =new Freind();
                 freind.setId(rs.getInt("id"));
                 freind.setId_user(rs.getInt("id_user"));
                 freind.setId_freind(rs.getInt("id_freind"));
@@ -100,6 +121,16 @@ public class FreindDAO extends DAO<Freind>{
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return freinds;
+    }
+
+    @Override
+    public void delete(Freind obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean create(Freind obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

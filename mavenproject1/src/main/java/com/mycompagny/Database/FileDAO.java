@@ -102,14 +102,16 @@ public class FileDAO extends DAO<File> {
     }
 
     
-    public  List<File> getAll() {
+    public  List<File> getAll(int userid, String type) {
         
         ArrayList<File> files =new ArrayList<File>();
         PreparedStatement prepare =null;
          try {
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
-            "SELECT * FROM `file`");
+            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM freind fr ,file f WHERE  f.created_by=fr.id_freind and fr.id_user=? and  f.URL=? ");
+            prepare.setInt(1, userid);
+            prepare.setString(2,type);
             ResultSet rs = prepare.executeQuery();
             while (rs.next()) {
                 File file =new File();

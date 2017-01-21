@@ -56,8 +56,8 @@ public class FileRessource {
 	}
 	
 	@GET
-	public  List<File> getAllFiles() {
-		return file_dao.getAll();
+	public  List<File> getAllFiles(@PathParam("userid") int id,@PathParam("type") String type) {
+		return file_dao.getAll(id,type);
 	}
         
          @GET
@@ -93,7 +93,6 @@ public class FileRessource {
     public Response uploadPdfFile(@FormDataParam("fichier") InputStream fileInputStream,
                                     @FormDataParam("fichier") FormDataContentDisposition fileMetaData,
                                     @FormDataParam("created_by") int created_by,
-                                    @FormDataParam("file_name") String file_name,
                                     @FormDataParam("type") String type,
                                     @PathParam("userid") int userid)throws Exception
     { 
@@ -101,7 +100,7 @@ public class FileRessource {
         //String file_name =fileMetaData.getFileName();
         //jsonPart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
         //File file = jsonPart.getValueAs(File.class);
-        File file = new File(userid,file_name,type,UPLOAD_PATH);
+        File file = new File(userid,fileMetaData.getFileName(),type,UPLOAD_PATH);
         UPLOAD_PATH ="C:/Users/boukarabilaa/Downloads/mavenproject1/src/main/java/Files/"+file.getDate()+fileMetaData.getFileName();
         file.setUrl(UPLOAD_PATH);
         System.out.println(file.toString());
@@ -130,8 +129,8 @@ public class FileRessource {
     }
     
     @GET
-    @Path("/{fileid}")
-    @Produces("image/jpg")
+    @Path("Photos/{fileid}")
+    @Produces({"image/jpg","image/png", "image/jpeg", "image/gif"})
     public Response getFile(@PathParam("fileid") int fileid) {
             File f =file_dao.find(fileid);
             String FILE_PATH = f.getUrl();
@@ -143,6 +142,24 @@ public class FileRessource {
 		return response.build();
 
 	}
+    @GET
+    @Path("Video/{fileid}")
+    @Produces({"video/*"})
+    public Response getVideo(@PathParam("fileid") int fileid) {
+            File f =file_dao.find(fileid);
+            String FILE_PATH = f.getUrl();
+		      System.out.println(FILE_PATH);
+            java.io.File file = new java.io.File(FILE_PATH);
+
+		Response.ResponseBuilder response = Response.ok((Object) file);
+		
+		return response.build();
+
+	}
+  
+    
+    
+    
    
 }
     

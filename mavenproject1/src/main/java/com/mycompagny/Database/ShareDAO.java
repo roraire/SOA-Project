@@ -115,10 +115,10 @@ public class ShareDAO extends DAO<Share>{
         ArrayList<File> files =new ArrayList<>();
         PreparedStatement prepare =null;
          try {
-             //"SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM share s ,file f WHERE f.created_by=? and s.shared_with=? ");
+             //"SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM share s ,file f  WHERE s.shared_with=? and s.Id_file=f.Id_file");
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
-            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM share s ,file f  WHERE s.shared_with=? and s.Id_file=f.Id_file");
+            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM freind fr ,file f WHERE f.created_by=fr.id_freind and fr.id_user=?");
             prepare.setInt(1,id);
             ResultSet rs = prepare.executeQuery();
             while (rs.next()) {
