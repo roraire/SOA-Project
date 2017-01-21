@@ -16,10 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import sun.misc.BASE64Decoder;
 
-/**
- *
- * @author boukarabilaa
- */
+
 public class UserDAO extends DAO<User>{
 
     
@@ -73,6 +70,7 @@ public class UserDAO extends DAO<User>{
     @Override
     public boolean create(User obj) {
         boolean msg =false;
+        System.out.println("hygu");
         if(this.find(obj.getEmail()).getEmail() !=null){
          try {
             //this.connect = ConnectionSql.getInstance();

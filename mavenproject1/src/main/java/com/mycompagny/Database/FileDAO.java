@@ -16,10 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author boukarabilaa
- */
+
 public class FileDAO extends DAO<File> {
 
     @Override
@@ -109,7 +106,7 @@ public class FileDAO extends DAO<File> {
          try {
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
-            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM freind fr ,file f WHERE  f.created_by=fr.id_freind and fr.id_user=? and  f.URL=? ");
+            "SELECT f.Id_file,f.created_by, f.file_name, f.Date, f.Type, f.URL FROM freind fr ,file f WHERE  f.created_by=fr.id_freind and fr.id_user=? and  f.Type=? ");
             prepare.setInt(1, userid);
             prepare.setString(2,type);
             ResultSet rs = prepare.executeQuery();
@@ -121,6 +118,21 @@ public class FileDAO extends DAO<File> {
                 file.setDate(rs.getLong("Date"));
                 file.setType(rs.getString("Type"));
                 file.setUrl(rs.getString("URL"));
+                files.add(file);
+            }
+            prepare = this.connect.prepareStatement(
+            "SELECT *FROM file f WHERE  f.created_by=? and f.Type=? ");
+            prepare.setInt(1, userid);
+            prepare.setString(2,type);
+            ResultSet rs2 = prepare.executeQuery();
+            while (rs2.next()) {
+                File file =new File();
+                file.setId(rs2.getInt("Id_file"));
+                file.setCreated_by(rs2.getInt("created_by"));
+                file.setFile_name(rs2.getString("file_name"));
+                file.setDate(rs2.getLong("Date"));
+                file.setType(rs2.getString("Type"));
+                file.setUrl(rs2.getString("URL"));
                 files.add(file);
             }
         } catch (SQLException ex) {

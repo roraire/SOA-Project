@@ -7,6 +7,7 @@ package com.mycompagny.Database;
 
 import com.mycompagny.Model.File;
 import com.mycompagny.Model.Freind;
+import com.mycompagny.Model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,10 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author boukarabilaa
- */
+
 public class FreindDAO extends DAO<Freind>{
 
     @Override
@@ -67,6 +65,9 @@ public class FreindDAO extends DAO<Freind>{
     public boolean freindExist(int iduser,int idfreind) {
     PreparedStatement prepare =null;
         boolean msg=false;
+        UserDAO u=new UserDAO();
+        User user= u.find(idfreind);
+        if(user.getEmail() !=""){
        try {
             this.connect = ConnectionSql.getInstance();
             prepare = this.connect.prepareStatement(
@@ -79,7 +80,7 @@ public class FreindDAO extends DAO<Freind>{
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }}
        return msg;
     }
     public boolean delete(int iduser,int idfreind) {

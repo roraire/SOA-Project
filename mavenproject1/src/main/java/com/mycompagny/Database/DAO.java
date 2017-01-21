@@ -5,10 +5,7 @@
  */
 package com.mycompagny.Database;
 
-/**
- *
- * @author BoukarabilaA
- */
+
 import com.mycompagny.Database.ConnectionSql;
 import java.sql.Connection;
 import java.util.List;

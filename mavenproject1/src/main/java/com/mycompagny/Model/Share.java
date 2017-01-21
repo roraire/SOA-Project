@@ -7,10 +7,7 @@ package com.mycompagny.Model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author boukarabilaa
- */
+
 
 @XmlRootElement 
 public class Share {

@@ -20,42 +20,40 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-/**
- *
- * @author BoukarabilaA
- */
+
 
 @Path("/{userid}/Friends")
-@Consumes({MediaType.APPLICATION_JSON})
-@Produces(MediaType.APPLICATION_JSON)
 
 public class FriendRessource {
     FreindDAO freind_dao = new FreindDAO();
     UserDAO user_dao=new UserDAO();
-    @GET
-     public List<Freind> getFreinds(@PathParam("userid") int userid) {
+    
+
+        @GET
+        @Consumes({MediaType.APPLICATION_JSON})
+        @Produces(MediaType.APPLICATION_JSON)
+        public List<Freind> getFreinds(@PathParam("userid") int userid) {
 		return freind_dao.getAll(userid);
 	}
 	
 	@POST
         @Path("/{friendEmail}")
-        @Produces(MediaType.TEXT_PLAIN)
-        public boolean addFreind(@PathParam("userid") int userid, @FormDataParam("friendEmail")String email) {
+        public boolean addFreind(@PathParam("userid") int userid, @PathParam("friendEmail")String email) {
               boolean msg=false;
               
             User u=user_dao.find(email);
             if(!freind_dao.freindExist(userid, u.getId())){
-            if(freind_dao.create(userid,u.getId()) && freind_dao.create(u.getId(),userid)  ){
+            freind_dao.create(userid,u.getId());
+            freind_dao.create(u.getId(),userid) ; 
             msg=true;
-            }
+            
             }
             return msg;
 	}
         
         @DELETE
         @Path("/{friendEmail}")
-        @Produces(MediaType.TEXT_PLAIN)
-	public boolean deleteFreind(@PathParam("userid") int userid, @PathParam("friendEmail") String email) {
+	public boolean deleteFreind(@PathParam("userid") int userid,  @PathParam("friendEmail") String email) {
             boolean msg=false;
             User u=user_dao.find(email);
              if( freind_dao.delete(userid,u.getId()) && freind_dao.delete(u.getId(),userid)){

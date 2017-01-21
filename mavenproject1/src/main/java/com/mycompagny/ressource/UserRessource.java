@@ -25,10 +25,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import sun.misc.BASE64Decoder;
-/**
- *
- * @author boukarabilaa
- */
+
 @Path("profiles")
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,7 +35,7 @@ public class UserRessource {
        
         @GET
         @Path("/Authentification")
-	public User getAuth(@HeaderParam("authorization") String authString) {
+	public Response getAuth(@HeaderParam("authorization") String authString) {
             System.out.println(authString );
             
            if(authString == null || authString.isEmpty() || !user_dao.isUserAuthenticated(authString)){
@@ -55,12 +52,15 @@ public class UserRessource {
         }
         decodedAuth = new String(bytes);
         String[] userAuth = decodedAuth.split(":");
-        
-        System.out.println(userAuth[0]+userAuth[1]);
-        return  user_dao.find(userAuth[0]);
+        User u=user_dao.find(userAuth[0]);
+          Response.ResponseBuilder response = Response.ok((Object) u);
+		response.header("user", u);
+		return response.build();
            }
             
-           return null;
+           Response.ResponseBuilder response = Response.noContent();
+		
+		return response.build();
               
            //NewCookie cookie = new NewCookie("authorization",authString);
              // return Response.ok("OK").cookie(cookie).build();
@@ -92,13 +92,14 @@ public class UserRessource {
 	@POST
 	public void addUser( User profile) {
             System.out.println("com.mycompagny.ressource.UserRessource.addUser()");
+            
 		user_dao.create(profile);
 	}
 	
-	@GET
+        /*@GET
 	public  List<User> getAllUsers() {
 		return user_dao.getAll();
-	}
+	}*/
 	
 	@PUT
 	public  User updateUser( User profile) {

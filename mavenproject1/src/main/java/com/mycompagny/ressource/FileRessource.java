@@ -29,10 +29,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-/**
- *
- * @author boukarabilaa
- */
+
 @Path("/")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
@@ -56,6 +53,7 @@ public class FileRessource {
 	}
 	
 	@GET
+        @Path("/Type/{type}")
 	public  List<File> getAllFiles(@PathParam("userid") int id,@PathParam("type") String type) {
 		return file_dao.getAll(id,type);
 	}
@@ -90,7 +88,7 @@ public class FileRessource {
     @POST
     @Path("/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response uploadPdfFile(@FormDataParam("fichier") InputStream fileInputStream,
+    public Response uploadFile(@FormDataParam("fichier") InputStream fileInputStream,
                                     @FormDataParam("fichier") FormDataContentDisposition fileMetaData,
                                     @FormDataParam("created_by") int created_by,
                                     @FormDataParam("type") String type,
@@ -129,7 +127,7 @@ public class FileRessource {
     }
     
     @GET
-    @Path("Photos/{fileid}")
+    @Path("/{fileid}")
     @Produces({"image/jpg","image/png", "image/jpeg", "image/gif"})
     public Response getFile(@PathParam("fileid") int fileid) {
             File f =file_dao.find(fileid);
@@ -139,6 +137,22 @@ public class FileRessource {
 
 		Response.ResponseBuilder response = Response.ok((Object) file);
 		
+		return response.build();
+
+	}
+    
+    
+    @GET
+    @Path("Photos/{fileid}")
+    @Produces({"image/jpg","image/png", "image/jpeg", "image/gif"})
+    public Response getPFile(@PathParam("fileid") int fileid) {
+            File f =file_dao.find(fileid);
+            String FILE_PATH = f.getUrl();
+		      System.out.println(FILE_PATH);
+            java.io.File file = new java.io.File(FILE_PATH);
+
+		Response.ResponseBuilder response = Response.ok((Object) file);
+		response.header("Content-Disposition", "attachment; filename="+f.getFile_name()+"");
 		return response.build();
 
 	}

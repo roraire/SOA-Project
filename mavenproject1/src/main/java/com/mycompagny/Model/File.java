@@ -8,10 +8,7 @@ package com.mycompagny.Model;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author boukarabilaa
- */
+
 
 @XmlRootElement 
 public class File {
